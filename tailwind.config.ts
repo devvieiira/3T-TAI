@@ -52,6 +52,9 @@ const config: Config = {
 				},
 				figma: {
 					gray: "#F3F5F7",
+					background: "#ABABAB",
+					primary: "#7273DD",
+					violet: "#F1F1FE",
 				},
 			},
 			borderRadius: {
