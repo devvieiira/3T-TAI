@@ -1,7 +1,10 @@
+"use client";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Menu, Search } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
 	const example = [
@@ -24,6 +27,8 @@ export default function Home() {
 			value: "6",
 		},
 	];
+
+	const router = useRouter();
 	return (
 		<main className="min-h-screen bg-figma-background pb-10">
 			{/* BARRA DE PESQUISA E MENU */}
@@ -44,17 +49,25 @@ export default function Home() {
 			{/* BODY */}
 			<div className="flex flex-col items-center py-6 space-y-4">
 				{example.map((item) => (
-					<Card className="w-[380px] px-3 py-2" key={item.value}>
+					<Card className="w-[380px] px-3 py-4" key={item.value}>
 						{/* corpo da postagen */}
 						<div>
 							<span className="text-sm">
 								Aqui demonstra um exemplo de postagem,... bla bla bla...
 							</span>
-							<div className="w-full h-[180px] bg-gray-400 rounded-sm" />
+							<div className="w-full h-[200px] bg-gray-400 rounded-sm" />
 						</div>
 						{/* EM BREVE: LIKES E COMENTÁRIOS */}
 					</Card>
 				))}
+			</div>
+			<div className="fixed bottom-20 right-5">
+				<Button
+					className="w-[50px] h-[50px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-full"
+					onClick={() => router.push("/post")}
+				>
+					<span className="text-xl text-center">+</span>
+				</Button>
 			</div>
 		</main>
 	);
