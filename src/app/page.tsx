@@ -25,7 +25,7 @@ export default function Home() {
 		},
 	];
 	return (
-		<main className="min-h-screen bg-figma-background mb-10">
+		<main className="min-h-screen bg-figma-background pb-10">
 			{/* BARRA DE PESQUISA E MENU */}
 			<header className="bg-white">
 				<div className="flex items-center justify-between space-x-2 px-4  py-6">
