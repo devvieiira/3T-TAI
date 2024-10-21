@@ -52,7 +52,7 @@ const config: Config = {
 				},
 				figma: {
 					gray: "#F3F5F7",
-					background: "#ABABAB",
+					background: "#F6F7F9",
 					primary: "#7273DD",
 					violet: "#F1F1FE",
 				},
