@@ -2,68 +2,118 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Menu, Search } from "lucide-react";
+import { createLike } from "@/request/likes/create-like";
+import { getPost } from "@/request/post/get";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Search, ThumbsUp } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import logo from "@/img/logo.svg"
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Home() {
-	const example = [
-		{
-			value: "1",
-		},
-		{
-			value: "2",
-		},
-		{
-			value: "3",
-		},
-		{
-			value: "4",
-		},
-		{
-			value: "5",
-		},
-		{
-			value: "6",
-		},
-	];
+	const [search, setSearch] = useState("")
+	const { data: posts, refetch } = useQuery({
+		queryKey: ["get-post"],
+		queryFn: getPost,
+	});
+
+	const { mutateAsync} = useMutation({
+		mutationKey: ["like"],
+		mutationFn: (key:string) => createLike(key)
+	})
+
+	// console.log(posts);
+
+	const filtered = posts?.filter((post) => {
+		return post.title.toLowerCase().includes(search.toLowerCase());
+	});
 
 	const router = useRouter();
+
+
+	console.log(posts)
 	return (
 		<main className="min-h-screen bg-figma-background pb-10">
 			{/* BARRA DE PESQUISA E MENU */}
 			<header className="bg-white">
 				<div className="flex items-center justify-between space-x-2 px-4  py-6">
-					<div className="w-5/6 flex items-center relative">
+					<div className="w-5/6 2xl:w-4/5 flex items-center  relative">
 						<Input
 							className="bg-figma-gray rounded-xl px-8"
 							placeholder="Search"
+							onChange={(e) => setSearch(e.target.value)}
 						/>
 						<Search className="absolute left-2 text-primary" size={18} />
 					</div>
 					<Link href="#">
-						<Menu />
+						<Image className="w-16 h-16" src={logo} alt="logo" />
 					</Link>
 				</div>
 			</header>
 			{/* BODY */}
 			<div className="flex flex-col items-center py-6 space-y-4">
-				{example.map((item) => (
-					<Card className="w-[380px] px-3 py-4" key={item.value}>
+				{filtered !== undefined && filtered.length > 0 ? (
+					<>
+						{filtered?.map((item) => (
+					<Card className="w-[380px] md:w-[500px] lg:w-[620px] xl:w-[780px] px-3 py-4 space-y-3" key={item.id}>
 						{/* corpo da postagen */}
-						<div>
-							<span className="text-sm">
-								Aqui demonstra um exemplo de postagem,... bla bla bla...
-							</span>
-							<div className="w-full h-[200px] bg-gray-400 rounded-sm" />
+						<div className="space-y-3">
+							<h1 className="font-semibold text-base">{item.title}</h1>
+							<span className="text-sm">{item.content}</span>
+							{item.imageUrl &&item.imageUrl.length > 0 && (
+								<div className="w-full h-[180px] md:h-[300px] lg:h-[360px] xl:h-[410px] bg-gray-400 rounded-sm relative">
+									<Image className="rounded-sm object-cover" src={`${process.env.NEXT_PUBLIC_URL}/${item.imageUrl}`} alt="img" fill/>
+								</div>
+							)}
 						</div>
 						{/* EM BREVE: LIKES E COMENTÁRIOS */}
+						<div className="flex items-center px-4 justify-end space-x-2 h-6">
+							<span className="h-5 font-semibold">{item.likes}</span>
+							<Link href={""} onClick={async () => {
+								await mutateAsync(item.id)
+								refetch()
+							}}>
+								<ThumbsUp className="w-4 h-4" />
+							</Link>
+						</div>
 					</Card>
 				))}
+					</>
+				) : (
+					<>
+						{posts?.map((item) => (
+					<Card className="w-[380px] md:w-[500px] lg:w-[620px] xl:w-[780px] px-3 py-4 space-y-3" key={item.id}>
+						{/* corpo da postagen */}
+						<div className="space-y-3">
+							<h1 className="font-semibold text-base">{item.title}</h1>
+							<span className="text-sm">{item.content}</span>
+							{item.imageUrl &&item.imageUrl.length > 0 && (
+								<div className="w-full h-[180px] md:h-[300px] lg:h-[360px] xl:h-[410px] bg-gray-400 rounded-sm relative">
+									<Image className="rounded-sm object-cover" src={`${process.env.NEXT_PUBLIC_URL}/${item.imageUrl}`} alt="img" fill/>
+								</div>
+							)}
+						</div>
+						{/* EM BREVE: LIKES E COMENTÁRIOS */}
+						<div className="flex items-center px-4 justify-end space-x-2 h-6">
+							<span className="h-5 font-semibold">{item.likes}</span>
+							<Link href={""} onClick={async () => {
+								await mutateAsync(item.id)
+								refetch()
+							}}>
+								<ThumbsUp className="w-4 h-4" />
+							</Link>
+						</div>
+						
+					</Card>
+				))}
+					</>
+				)}
 			</div>
 			<div className="fixed bottom-20 right-5">
 				<Button
-					className="w-[50px] h-[50px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-full"
+					className="w-[50px] h-[50px] bg-gradient-to-r from-[#5418F2] via-[#9C40FD] to-[#C854FD] hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-full"
 					onClick={() => router.push("/post")}
 				>
 					<span className="text-xl text-center">+</span>
