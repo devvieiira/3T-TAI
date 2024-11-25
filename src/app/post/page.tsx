@@ -137,7 +137,7 @@ export default function Post() {
 												accept="image/*"
 												{...register("photo")}
 											/>
-											<div className="w-full h-[180px] flex justify-center items-center relative rounded-lg bg-red-500">
+											<div className="w-full h-[180px] xl:h-[260px] flex justify-center items-center relative rounded-lg bg-red-500">
 												<Image
 													className="object-cover rounded-lg"
 													src={URL.createObjectURL(image)}
@@ -149,12 +149,12 @@ export default function Post() {
 									) : (
 										<>
 											<Input
-												className="hidden"
+												className="hidden object-cover"
 												type="file"
 												accept="image/*"
 												{...register("photo")}
 											/>
-											<div className="w-full h-[180px] flex justify-center items-center bg-gray-300 rounded-md">
+											<div className="w-full h-[180px] xl:h-[260px] flex justify-center items-center bg-gray-300 rounded-md">
 												<FileInput />
 											</div>
 										</>
