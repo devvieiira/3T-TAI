@@ -16,6 +16,7 @@ import Image from "next/image";
 import { FileInput } from "lucide-react";
 import { toast } from "sonner";
 import logo from "@/img/logo.svg"
+import Link from "next/link";
 
 const schema = z.object({
 	name: z.string().min(3, "Title must be at least 3 characters long"),
@@ -85,7 +86,10 @@ export default function Post() {
 			}
 			toast.promise(invite, {
 				loading: "Uploading...",
-				success: "Uploaded!",
+				success: () => {
+					router.back()
+					return "Uploaded!"
+				},
 				error: "Failed to upload",
 			})
 		}
@@ -95,13 +99,16 @@ export default function Post() {
 	return (
 		<main className="min-h-screen bg-figma-background pb-10 ">
 			<header className="bg-white h-[84px] flex justify-center items-center" >
+			<Link href="/">
 			<Image className="w-16 h-16" src={logo} alt="logo" />
+			</Link>
 			</header>
 			<div className="flex justify-center">
 			<form className="py-8 space-y-4 w-full md:w-4/5 lg:w-4/6 xl:w-1/2" onSubmit={handleSubmit(post)}>
 				<div className="space-y-2 px-4">
 					<Label htmlFor="contain">Contains image:</Label>
 				<Select
+				defaultValue="no"
 								onValueChange={(value) => {
 									setIsImage(value);
 								}}
@@ -160,6 +167,7 @@ export default function Post() {
 					<Input
 						type="text"
 						id="title"
+						maxLength={50}
 						placeholder="Type the title here..."
 						className="border-black/30 w-full"
 						{...register("name")}
@@ -171,6 +179,7 @@ export default function Post() {
 					<Textarea
 						id="title"
 						placeholder="Write something here..."
+						maxLength={200}
 						className="border-black/30 w-full resize-none h-20"
 						{...register("content")}
 					/>

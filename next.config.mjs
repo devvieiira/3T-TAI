@@ -13,6 +13,12 @@ const nextConfig = {
         port: '4000',
         pathname: '/**',
       },
+      {
+        protocol: "https",
+        port: '',
+        hostname: 'backendmostratecnica.online',
+        pathname: '/api/**',
+      },
     ]
   }
 };

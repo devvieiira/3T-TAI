@@ -14,6 +14,7 @@ import { useState } from "react";
 
 export default function Home() {
 	const [search, setSearch] = useState("")
+	const [isOpen, setIsOpen] = useState(false)
 	const { data: posts, refetch } = useQuery({
 		queryKey: ["get-post"],
 		queryFn: getPost,
@@ -35,7 +36,8 @@ export default function Home() {
 
 	console.log(posts)
 	return (
-		<main className="min-h-screen bg-figma-background pb-10">
+		<>
+			<main className="min-h-screen bg-figma-background pb-10">
 			{/* BARRA DE PESQUISA E MENU */}
 			<header className="bg-white">
 				<div className="flex items-center justify-between space-x-2 px-4  py-6">
@@ -60,8 +62,8 @@ export default function Home() {
 					<Card className="w-[380px] md:w-[500px] lg:w-[620px] xl:w-[780px] px-3 py-4 space-y-3" key={item.id}>
 						{/* corpo da postagen */}
 						<div className="space-y-3">
-							<h1 className="font-semibold text-base">{item.title}</h1>
-							<span className="text-sm">{item.content}</span>
+							<h1 className="font-semibold text-base break-words">{item.title}</h1>
+							<span className="text-sm break-words">{item.content}</span>
 							{item.imageUrl &&item.imageUrl.length > 0 && (
 								<div className="w-full h-[180px] md:h-[300px] lg:h-[360px] xl:h-[410px] bg-gray-400 rounded-sm relative">
 									<Image className="rounded-sm object-cover" src={`${process.env.NEXT_PUBLIC_URL}/${item.imageUrl}`} alt="img" fill/>
@@ -71,12 +73,13 @@ export default function Home() {
 						{/* EM BREVE: LIKES E COMENTÁRIOS */}
 						<div className="flex items-center px-4 justify-end space-x-2 h-6">
 							<span className="h-5 font-semibold">{item.likes}</span>
-							<Link href={""} onClick={async () => {
+							<button onClick={async () => {
+								// e.preventDefault()
 								await mutateAsync(item.id)
 								refetch()
 							}}>
 								<ThumbsUp className="w-4 h-4" />
-							</Link>
+							</button>
 						</div>
 					</Card>
 				))}
@@ -87,8 +90,8 @@ export default function Home() {
 					<Card className="w-[380px] md:w-[500px] lg:w-[620px] xl:w-[780px] px-3 py-4 space-y-3" key={item.id}>
 						{/* corpo da postagen */}
 						<div className="space-y-3">
-							<h1 className="font-semibold text-base">{item.title}</h1>
-							<span className="text-sm">{item.content}</span>
+							<h1 className="font-semibold text-base break-words">{item.title}</h1>
+							<span className="text-sm break-words">{item.content}</span>
 							{item.imageUrl &&item.imageUrl.length > 0 && (
 								<div className="w-full h-[180px] md:h-[300px] lg:h-[360px] xl:h-[410px] bg-gray-400 rounded-sm relative">
 									<Image className="rounded-sm object-cover" src={`${process.env.NEXT_PUBLIC_URL}/${item.imageUrl}`} alt="img" fill/>
@@ -100,7 +103,6 @@ export default function Home() {
 							<span className="h-5 font-semibold">{item.likes}</span>
 							<Link href={""} onClick={async () => {
 								await mutateAsync(item.id)
-								refetch()
 							}}>
 								<ThumbsUp className="w-4 h-4" />
 							</Link>
@@ -120,5 +122,6 @@ export default function Home() {
 				</Button>
 			</div>
 		</main>
+		</>
 	);
 }
